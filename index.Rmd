@@ -1,30 +1,199 @@
 ---
-title: "Git and Github tutorial"
+title: "git/github tutorial"
 author: "Alana Schick"
 date: '2019-07-31'
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+All computational biologists should use [git](https://git-scm.com) and [github](https://github.com). Here is a *brief* overview. There are many more (and much more thorough) resources found [here](https://kbroman.org/github_tutorial/pages/resources.html).
+
+Version control is the lab notebook of the digital world: it’s what people use to keep track of what they’ve done and to collaborate with other people. Every large software development project relies on it, and most programmers use it for their small jobs as well. And it isn’t just for software: books, papers, small data sets, and anything that changes over time or needs to be shared can and should be stored in a version control system.
+
+![Piled Higher and Deeper by Jorge Cham, http://www.phdcomics.com/comics/archive_print.php?comicid=1531](./fig/phd101212s.png)
+
+# Getting started with git/github
+
+If you're new to **git** and **github**, you need to download and install **git** and get a **github** account. See these [very excellent instructions](https://help.github.com/en/articles/set-up-git) to do this.
+
+## Create a repository from scratch
+First, make a directory and then move into that directory:
+
+```{r, eval = FALSE}
+$ mkdir projectname
+$ cd projectname
+```
+Then tell **git** to make the `projectname` directory into a repository:
+```{r, eval = FALSE}
+$ git init
+```
+Create then add a file to your repository:
+```{r, eval = FALSE}
+$ nano Rscript.R
+<type some code>
+$ git add Rscript.R
+$ git commit -m "add Rscript"
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+## Create a repository from an existing project
+Go to the directory containing your project:
+```{r, eval = FALSE}
+$ git init
+```
+Add and commit files:
+```{r, eval = FALSE}
+$ git add importantfile.txt
+$ git commit -m "add stuff"
 ```
 
-## Including Plots
+## Connect your repository to github
+You now have a local git repository. You can use git locally or you can connect it to your github account, so you can access your repo remotely.
 
-You can also embed plots, for example:
+* Go to [github](https://github.com)
+* Log in to your account
+* Click the `new repository` button in the top-right. You can initialize with a README file if you want
+* Click the `Create repository` button
+* Follow the second set of instructions, **Push an existing repository...**
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r, eval = FALSE}
+$ git remote add origin https://github.com/username/projectname
+$ git push origin master
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Basic usage
+![The git staging area](./fig/git-staging-area.svg)
+
+## Common git commands
+
+Use `git add` and `git commit` to **stage** and **commit** changes. At any time, the command `git status` tells you what changes have been made in your repository and what changes are staged (ie. ready to commit).
+
+When you commit, you will need to provide a brief message with the -m option:
+```{r, eval = FALSE}
+$ git commit -m "I did a thing"
+```
+
+**Push** your changes to github using `git push`.
+
+Use `git diff` to list the changes that have been made. To look at changes in a particular file only, use:
+```{r, eval = FALSE}
+$ git diff script.R
+```
+
+## .gitgnore
+
+The various files in your project directory that you're not tracking in git should be indicated in a `.gitignore` file. This is not required but can be very handy for ignorning files like `.DS_Store`, `Rhistory`, etc. 
+
+# Collaborating
+
+## Option 1 - contribute to a repository by forking it
+
+### To contribute a change to someone else's repository:
+
+* Go to the repository on github
+* Click the `fork` button at the top right
+* You should now have your own copy of that repository in your github account
+* Open a terminal window and type:
+
+```{r, eval = FALSE}
+$ git clone git@github.com:yourusername/the_repo
+```
+
+* You'll now have a local copy of your version of the repository
+* Go into that directory and add a connection to the original owner's repository:
+
+```{r, eval = FALSE}
+$ cd the_repo
+$ git remote add otherusername git://github.com/otherusername/the_repo
+```
+
+* To check if this worked:
+```{r, eval = FALSE}
+$ git remote -v
+```
+
+* Make changes to the files
+* Use `git add` and `git commit` to save the changes
+* Use `git push` to push them back to **your version** of the repository on github
+* Go to your version of the repository on github
+* Click the `Pull Request` button at the top
+* Click the green button `Create pull request`, give a title and description of the changes and click `Create pull request` again
+
+### Pulling other's changes
+
+Before you make further changes to the repository, you should check that your version is up to date. Go into the directory for the project and type:
+```{r, eval = FALSE}
+$ git pull otherusername master
+```
+This will pull and merge all of the changes that have been made since you forked the repository. Now push them back to your github:
+```{r, eval = FALSE}
+$ git push
+```
+
+### Handling pull requests
+
+If other people have made changes to your code, they can contribute them by forking and submitting a pull request as described above. Once they submit a pull request, you'll get an email about it. 
+
+* Go to your version of the repository on github
+* Click on `Pull Requests` at the top
+* Click on the particular request
+* You'll see their comments and exact changes
+* You can add a comment, close the request (ie. deny it), or accept it by clicking `Merge pull request`
+* To get the changes into your local repository, open a terminal and type:
+```{r, eval = FALSE}
+$ git pull
+```
+
+## Option 2 - add a collaborator to a repository
+
+To add changes to a repository, the **owner** needs to give the **collaborator** access. On github, click the settings button on the right, then select `Collaborators`, and enter the username(s).
+
+![](./fig/github-add-collaborators.png)
+
+To accept access to the owner's repo, the collaborator needs to go to their [github notifications](https://github.com/notifications) to accept access.
+
+Then, the collaborator needs to download the owner's repo using `git clone`:
+```{r, eval = FALSE}
+$ git clone https://github.com/otherusername/repo_name 
+```
+
+The collaborator can then make changes and push them to the **owner's** repository on github:
+```{r, eval = FALSE}
+$ git push origin master
+```
+
+To download the collaborator's changes from github, the owner would type:
+```{r, eval = FALSE}
+$ git pull origin master
+```
+
+# Conflicts
+
+If there are multiple copies of a repository and changes are made to them simultaneously, conflicts will arise.
+
+![](./fig/conflict.svg)
+
+When you try to push your local changes to a github repository that has been modified, you will get: `error: failed to push some refs... `.
+
+You must first pull the changes from github and merge them into your local copy:
+```{r, eval = FALSE}
+$ git pull origin master
+```
+
+Sometimes, git will be able to merge the two copies without any problem. Sometimes, you will get this error:
+```
+Auto-merging filename
+CONFLICT (content): Merge conflict in filename
+Automatic merge failed; fix conflicts and then commit the result.
+```
+If you open the offending file in a text editor, you’ll find an indication of the bits that are different, something like this:
+```
+<<<<<<< HEAD
+A line in my file.
+=======
+A line in my friend's file
+>>>>>>> 031389f2cd2acde08e32f0beb084b2f7c3257fff
+```
+Edit the part between the arrows (keeping either the changes in your local repository or the changes in the remote repository, or making a new change) then use `git add`, `git commit` and `git push`.
+
+
+# Attribution
+This lesson was created by Alana Schick at the University of Calgary. It is sourced from [The Carpentries](https://carpentries.org/) material from the ['Version Control with Git' lesson](https://swcarpentry.github.io/git-novice/). Made available under the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/). [License](https://swcarpentry.github.io/git-novice/LICENSE.html).
