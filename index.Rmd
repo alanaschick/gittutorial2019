@@ -5,6 +5,8 @@ date: '2019-07-31'
 output: html_document
 ---
 
+Here are some changes I am making to this tutorial. 
+
 All computational biologists should use [git](https://git-scm.com) and [github](https://github.com). Here is a *brief* overview. There are many more (and much more thorough) resources found [here](https://kbroman.org/github_tutorial/pages/resources.html).
 
 Version control is the lab notebook of the digital world: it’s what people use to keep track of what they’ve done and to collaborate with other people. Every large software development project relies on it, and most programmers use it for their small jobs as well. And it isn’t just for software: books, papers, small data sets, and anything that changes over time or needs to be shared can and should be stored in a version control system.
